@@ -4,7 +4,8 @@ Welcome to Intro to LangSmith!
 
 ## Introduction
 In this course we will walk through the fundamentals of LangSmith - exploring observability, prompt engineering, evaluations, feedback mechanisms, and production monitoring. Take a look at the setup instructions below so you can follow along with any of our notebook examples.
-This version has been modified to be self-hosted, replacing all calls to langchain_openai with langchain_ollama and utilizing llama3.2.
+
+##### This version has been modified to be self-hosted, replacing all calls to langchain_openai with langchain_ollama and utilizing llama3.2.
 ---
 
 ## Setup
