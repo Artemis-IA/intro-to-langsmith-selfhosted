@@ -18,8 +18,7 @@ Answer:"""
 
 def get_vector_db_retriever():
     persist_path = os.path.join(tempfile.gettempdir(), "union.parquet")
-    embd = OllamaEmbeddings()
-
+    embd = OllamaEmbeddings(model="bge-m3")
     # If vector store exists, then load it
     if os.path.exists(persist_path):
         vectorstore = SKLearnVectorStore(
