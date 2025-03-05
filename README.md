@@ -28,3 +28,4 @@ $ python3 -m venv intro-to-ls
 $ source intro-to-ls/bin/activate
 $ pip install -r requirements.txt
 ```
+Note: This fork was tested with [Ollama version 0.5.13](https://github.com/ollama/ollama/releases/tag/v0.5.13).
