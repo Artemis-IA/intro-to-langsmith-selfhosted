@@ -4,7 +4,7 @@ langgraph-checkpoint-sqlite
 langsmith>=0.2.0
 langchain-community
 langchain-core
-langchain-openai
+langchain-ollama
 notebook
 python-dotenv
 lxml
