@@ -3,12 +3,10 @@ import tempfile
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_community.document_loaders.sitemap import SitemapLoader
 from langchain_community.vectorstores import SKLearnVectorStore
-from langchain_openai import OpenAIEmbeddings
-
+from langchain_ollama import OllamaEmbeddings
 def get_vector_db_retriever():
     persist_path = os.path.join(tempfile.gettempdir(), "union.parquet")
-    embd = OpenAIEmbeddings()
-
+    embd = OllamaEmbeddings(model="bge-m3")
     # If vector store exists, then load it
     if os.path.exists(persist_path):
         vectorstore = SKLearnVectorStore(

@@ -3,7 +3,7 @@ import tempfile
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_community.document_loaders.sitemap import SitemapLoader
 from langchain_community.vectorstores import SKLearnVectorStore
-from langchain_openai import OpenAIEmbeddings
+from langchain_ollama import OllamaEmbeddings
 
 RAG_PROMPT = """You are an assistant for question-answering tasks. 
 Use the following pieces of retrieved context to answer the latest question in the conversation. 
@@ -18,7 +18,7 @@ Answer:"""
 
 def get_vector_db_retriever():
     persist_path = os.path.join(tempfile.gettempdir(), "union.parquet")
-    embd = OpenAIEmbeddings()
+    embd = OllamaEmbeddings()
 
     # If vector store exists, then load it
     if os.path.exists(persist_path):
