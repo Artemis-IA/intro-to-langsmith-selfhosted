@@ -9,8 +9,8 @@ from openai import OpenAI
 from typing import List
 import nest_asyncio
 
-MODEL_NAME = "gpt-4o-mini"
-MODEL_PROVIDER = "openai"
+MODEL_NAME = "llama3.2"
+MODEL_PROVIDER = "ollama"
 APP_VERSION = 1.0
 RAG_SYSTEM_PROMPT = """You are an assistant for question-answering tasks. 
 Use the following pieces of retrieved context to answer the latest question in the conversation. 
@@ -18,11 +18,12 @@ If you don't know the answer, just say that you don't know.
 Use three sentences maximum and keep the answer concise.
 """
 
-openai_client = OpenAI()
+openai_client = OpenAI(base_url="http://localhost:11434/v1", api_key="ollama")
 
 def get_vector_db_retriever():
     persist_path = os.path.join(tempfile.gettempdir(), "union.parquet")
-    embd = OllamaEmbeddings()
+
+    embd = OllamaEmbeddings(model="llama3.2")
 
     # If vector store exists, then load it
     if os.path.exists(persist_path):

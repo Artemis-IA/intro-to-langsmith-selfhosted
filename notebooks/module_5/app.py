@@ -18,8 +18,7 @@ If you don't know the answer, just say that you don't know.
 Use three sentences maximum and keep the answer concise.
 """
 
-openai_client = OpenAI()
-
+openai_client = OpenAI(base_url="http://localhost:11434/v1", api_key="ollama")
 def get_vector_db_retriever():
     persist_path = os.path.join(tempfile.gettempdir(), "union.parquet")
     embd = OllamaEmbeddings()
