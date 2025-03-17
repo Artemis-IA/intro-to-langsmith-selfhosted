@@ -1,0 +1,26 @@
+{
+    "question": "Qu'est-ce que la théorie de l'effet relâché des souvenirs (LES) en psychologie?",
+    "expected_answer": "La théorie de l'effet relâché des souvenirs (LES) est une théorie psychologique qui suggère que les souvenirs sont liés à leurs associations émotionnelles et physiologiques, plutôt qu'à leur contenu propre. Cette théorie propose que les souvenirs peuvent être déclenchés par un stimulus externe qui ressemble au stimulus initial qui a déclenché le souvenir, ce qui peut provoquer une réaction émotionnelle ou physiologique similaire à celle de l'origine.",
+    "metadata": {
+        "difficulty": "medium",
+        "category": "psychologie",
+        "keywords": [
+            "théorie LES",
+            "souvenirs",
+            "émotions"
+        ]
+    }
+}
+{
+    "question": "Qui est l'auteur du roman 'La Nuit de l'Amour Éternel', publié en 1927 et cité par Sartre comme influence majeure ?",
+    "expected_answer": "Maurice Maeterlinck et Henri Bergson ont influencé l’auteur, mais le roman est attribué à l’écrivain allemand Franz Kafka qui a été influencé par la philosophie bergsoniste et avait lu les œuvres de Maurice Maeterlinck (note :  Sartre n'a pas dit qu'il était cité directement comme influence du livre, il parlait de son influence sur l'esprit),",
+    "metadata": {
+        "difficulty": "medium",
+        "category": "littérature française et allemande",
+        "keywords": [
+            "Franz Kafka",
+            "Maurice Maeterlinck",
+            "Henri Bergson"
+        ]
+    }
+}
