@@ -52,12 +52,15 @@ def setup_evaluation(dataset_name, dataset_id):
     # Configuration des évaluateurs avec les bons types
     eval_config = RunEvalConfig(
         evaluators=[
-            "qa",  # Évaluateur de base pour les questions-réponses
-            "criteria",  # Évaluateur basé sur des critères
-            "string_distance",  # Évaluateur de distance entre chaînes
-            "exact_match"  # Évaluateur de correspondance exacte
-        ],
-        custom_evaluators=[response_length_evaluator]  # Utilisation de la fonction directement
+            RunEvalConfig.QA(),  # Évaluateur de base pour les questions-réponses
+            RunEvalConfig.Criteria(criteria={
+                "correctness": "La réponse est-elle correcte et précise ?",
+                "helpfulness": "La réponse est-elle utile et informative ?",
+                "relevance": "La réponse est-elle pertinente par rapport à la question ?"
+            }),  # Évaluateur basé sur des critères
+            RunEvalConfig.StringDistance(),  # Évaluateur de distance entre chaînes
+            RunEvalConfig.ExactMatch()  # Évaluateur de correspondance exacte
+        ]
     )
     
     # Génération d'un nom de projet unique avec timestamp
@@ -97,54 +100,68 @@ def setup_evaluation(dataset_name, dataset_id):
 def analyze_results(project_name):
     client = Client()
     
-    # Récupération des runs avec filtrage
-    runs = client.list_runs(
-        project_name=project_name,
-        filter="has_feedback = true"  # Ne récupère que les runs avec feedback
-    )
-    
-    # Analyse des métriques avec plus de détails
-    metrics = {
-        "total_runs": len(list(runs)),
-        "feedback_scores": [],
-        "response_times": [],
-        "evaluator_scores": {},
-        "metadata_summary": {}
-    }
-    
-    for run in runs:
-        if run.feedback:
-            for feedback in run.feedback:
-                metrics["feedback_scores"].append(feedback.score)
-                evaluator_name = feedback.evaluator_name
-                if evaluator_name not in metrics["evaluator_scores"]:
-                    metrics["evaluator_scores"][evaluator_name] = []
-                metrics["evaluator_scores"][evaluator_name].append(feedback.score)
+    try:
+        # Récupération des runs avec filtrage et gestion des erreurs
+        runs = client.list_runs(
+            project_name=project_name,
+            filter="has_feedback:true",  # Syntaxe correcte pour le filtre
+            limit=50  # Limite le nombre de runs pour éviter les erreurs de rate limit
+        )
         
-        if run.end_time and run.start_time:
-            metrics["response_times"].append((run.end_time - run.start_time).total_seconds())
-        
-        # Analyse des métadonnées
-        if run.metadata:
-            for key, value in run.metadata.items():
-                if key not in metrics["metadata_summary"]:
-                    metrics["metadata_summary"][key] = []
-                metrics["metadata_summary"][key].append(value)
-    
-    # Calcul des moyennes et statistiques
-    if metrics["feedback_scores"]:
-        metrics["avg_score"] = sum(metrics["feedback_scores"]) / len(metrics["feedback_scores"])
-    if metrics["response_times"]:
-        metrics["avg_response_time"] = sum(metrics["response_times"]) / len(metrics["response_times"])
-    
-    # Calcul des moyennes par évaluateur
-    for evaluator, scores in metrics["evaluator_scores"].items():
-        metrics["evaluator_scores"][evaluator] = {
-            "average": sum(scores) / len(scores),
-            "count": len(scores)
+        # Analyse des métriques avec plus de détails
+        metrics = {
+            "total_runs": 0,
+            "feedback_scores": [],
+            "response_times": [],
+            "evaluator_scores": {},
+            "metadata_summary": {}
         }
-    
-    return metrics
+        
+        for run in runs:
+            metrics["total_runs"] += 1
+            if run.feedback:
+                for feedback in run.feedback:
+                    metrics["feedback_scores"].append(feedback.score)
+                    evaluator_name = feedback.evaluator_name
+                    if evaluator_name not in metrics["evaluator_scores"]:
+                        metrics["evaluator_scores"][evaluator_name] = []
+                    metrics["evaluator_scores"][evaluator_name].append(feedback.score)
+            
+            if run.end_time and run.start_time:
+                metrics["response_times"].append((run.end_time - run.start_time).total_seconds())
+            
+            # Analyse des métadonnées
+            if run.metadata:
+                for key, value in run.metadata.items():
+                    if key not in metrics["metadata_summary"]:
+                        metrics["metadata_summary"][key] = []
+                    metrics["metadata_summary"][key].append(value)
+        
+        # Calcul des moyennes et statistiques
+        if metrics["feedback_scores"]:
+            metrics["avg_score"] = sum(metrics["feedback_scores"]) / len(metrics["feedback_scores"])
+        if metrics["response_times"]:
+            metrics["avg_response_time"] = sum(metrics["response_times"]) / len(metrics["response_times"])
+        
+        # Calcul des moyennes par évaluateur
+        for evaluator, scores in metrics["evaluator_scores"].items():
+            metrics["evaluator_scores"][evaluator] = {
+                "average": sum(scores) / len(scores),
+                "count": len(scores)
+            }
+        
+        return metrics
+        
+    except Exception as e:
+        print(f"Erreur lors de l'analyse des résultats : {str(e)}")
+        return {
+            "error": str(e),
+            "total_runs": 0,
+            "feedback_scores": [],
+            "response_times": [],
+            "evaluator_scores": {},
+            "metadata_summary": {}
+        }
 
 if __name__ == "__main__":
     # Exemple d'utilisation
